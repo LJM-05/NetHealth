@@ -20,14 +20,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Finds and compiles all Java files automatically
+    # Compile all Java files into a dedicated bin directory
     - name: Compile Java Sources
       run: |
-        find . -name "*.java" > sources.txt
-        javac @sources.txt
+        mkdir -p bin
+        find . -name "*.java" ! -path "./bin/*" > sources.txt
+        javac -d bin @sources.txt
 
-    # Finds the compiled .class directory and runs NetHealth
+    # Dynamically find the class name (handling packages) and execute
     - name: Run NetHealth Probe Test
       run: |
-        CLASS_DIR=$(find . -name "NetHealth.class" -exec dirname {} \;)
-        java -cp "$CLASS_DIR:." NetHealth
+        CLASS_FILE=$(find bin -name "NetHealth.class" | head -n 1)
+        # Convert path bin/com/example/NetHealth.class -> com.example.NetHealth
+        FULL_CLASS=$(echo "$CLASS_FILE" | sed 's|bin/||' | sed 's|\.class||' | tr '/' '.')
+        echo "Executing class: $FULL_CLASS"
+        java -cp bin "$FULL_CLASS"
