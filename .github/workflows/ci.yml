@@ -20,8 +20,14 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Compile NetHealth Core
-      run: javac NetHealth.java
+    # Finds and compiles all Java files automatically
+    - name: Compile Java Sources
+      run: |
+        find . -name "*.java" > sources.txt
+        javac @sources.txt
 
+    # Finds the compiled .class directory and runs NetHealth
     - name: Run NetHealth Probe Test
-      run: java NetHealth
+      run: |
+        CLASS_DIR=$(find . -name "NetHealth.class" -exec dirname {} \;)
+        java -cp "$CLASS_DIR:." NetHealth
