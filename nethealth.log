@@ -6,3 +6,7 @@
 [2026-09-22 20:41:11] [pool-1-thread-3] [SUCCESS] Cisco Web Portal | Status: 200 | Latency: 861ms
 [2026-09-22 20:41:11] [pool-1-thread-2] [SUCCESS] Auth Service Cluster | Status: 200 | Latency: 902ms
 [2026-09-22 20:41:11] [pool-1-thread-4] [WARNING] Simulated Fault Node | Status: 404 | Latency: 1257ms
+[2026-09-22 21:35:22] [pool-1-thread-1] [SUCCESS] Primary Gateway Node | Status: 200 | Latency: 878ms
+[2026-09-22 21:35:22] [pool-1-thread-3] [SUCCESS] Cisco Web Portal | Status: 200 | Latency: 868ms
+[2026-09-22 21:35:22] [pool-1-thread-2] [SUCCESS] Auth Service Cluster | Status: 200 | Latency: 911ms
+[2026-09-22 21:35:22] [pool-1-thread-4] [WARNING] Simulated Fault Node | Status: 404 | Latency: 1321ms
