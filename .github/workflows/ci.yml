@@ -20,22 +20,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Compile all Java files preserving source directory structure
     - name: Compile Java Sources
       run: |
         mkdir -p bin
         find . -name "*.java" ! -path "./bin/*" > sources.txt
         javac -d bin @sources.txt
 
-    # Run NetHealth using classpath wildcards
     - name: Run NetHealth Probe Test
-      run: |
-        MAIN_FILE=$(find . -name "NetHealth.java" ! -path "./bin/*" | head -n 1)
-        PKG=$(grep -e "^package " "$MAIN_FILE" | head -n 1 | sed 's/package //' | sed 's/;//' | tr -d '\r')
-        if [ -z "$PKG" ]; then
-          FULL_CLASS="NetHealth"
-        else
-          FULL_CLASS="${PKG}.NetHealth"
-        fi
-        echo "Executing: $FULL_CLASS"
-        java -cp bin "$FULL_CLASS"
+      run: java -cp bin com.nethealth.monitor.NetworkMonitorApp
