@@ -20,18 +20,22 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Compile all Java files into a dedicated bin directory
+    # Compile all Java files preserving source directory structure
     - name: Compile Java Sources
       run: |
         mkdir -p bin
         find . -name "*.java" ! -path "./bin/*" > sources.txt
         javac -d bin @sources.txt
 
-    # Dynamically find the class name (handling packages) and execute
+    # Run NetHealth using classpath wildcards
     - name: Run NetHealth Probe Test
       run: |
-        CLASS_FILE=$(find bin -name "NetHealth.class" | head -n 1)
-        # Convert path bin/com/example/NetHealth.class -> com.example.NetHealth
-        FULL_CLASS=$(echo "$CLASS_FILE" | sed 's|bin/||' | sed 's|\.class||' | tr '/' '.')
-        echo "Executing class: $FULL_CLASS"
+        MAIN_FILE=$(find . -name "NetHealth.java" ! -path "./bin/*" | head -n 1)
+        PKG=$(grep -e "^package " "$MAIN_FILE" | head -n 1 | sed 's/package //' | sed 's/;//' | tr -d '\r')
+        if [ -z "$PKG" ]; then
+          FULL_CLASS="NetHealth"
+        else
+          FULL_CLASS="${PKG}.NetHealth"
+        fi
+        echo "Executing: $FULL_CLASS"
         java -cp bin "$FULL_CLASS"
